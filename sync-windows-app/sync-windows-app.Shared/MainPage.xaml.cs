@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -19,7 +20,6 @@ namespace sync_windows_app
     {
         private const string DatasetId = "myShoppingList";
         public event PropertyChangedEventHandler PropertyChanged;
-        private FHSyncDataset<ShoppingItem> _dataset;
         public ObservableCollection<ShoppingItem> ShoppingItems { get; private set; }
 
         public MainPage()
@@ -49,34 +49,28 @@ namespace sync_windows_app
 
         private void Button_OnClick(object sender, RoutedEventArgs e)
         {
+            var client = FHSyncClient.GetInstance();
             if (ListView.SelectedIndex != -1)
             {
                 var shoppingItem = ShoppingItems[ListView.SelectedIndex];
                 shoppingItem.Name = Item.Text;
-                _dataset.Update(shoppingItem);
-
-                //update item in observable list
-                ShoppingItems.Remove(shoppingItem);
-                ShoppingItems.Add(shoppingItem);
+                client.Update(DatasetId, shoppingItem);
             }
             else if (!string.IsNullOrEmpty(Item.Text))
             {
                 var shoppingItem = new ShoppingItem(Item.Text);
-                _dataset.Create(shoppingItem);
+                client.Create(DatasetId, shoppingItem);
                 ShoppingItems.Add(shoppingItem);
             }
 
             Item.Text = "";
-            PropertyChanged(this, new PropertyChangedEventArgs("ShoppingItems"));
         }
 
         private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (ListView.SelectedIndex == -1) return;
             var shoppingItem = ShoppingItems[ListView.SelectedIndex];
-            ShoppingItems.Remove(shoppingItem);
-            _dataset.Delete(shoppingItem.UID);
-            PropertyChanged(this, new PropertyChangedEventArgs("ShoppingItems"));
+            FHSyncClient.GetInstance().Delete<ShoppingItem>(DatasetId, shoppingItem.UID);
         }
 
         /// <summary>
@@ -87,16 +81,19 @@ namespace sync_windows_app
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             await FHClient.Init();
-            _dataset = FHSyncDataset<ShoppingItem>.Build<ShoppingItem>(DatasetId, new FHSyncConfig(), null, null);
-
-            _dataset.SyncNotificationHandler += (sender, args) =>
+            var client = FHSyncClient.GetInstance();
+            var config = new FHSyncConfig();
+            client.Initialise(config);
+            client.SyncCompleted += async (sender, args) =>
             {
-                ShoppingItems = new ObservableCollection<ShoppingItem>(_dataset.List());
-                PropertyChanged(this, new PropertyChangedEventArgs("ShoppingItems"));
-
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    ShoppingItems = new ObservableCollection<ShoppingItem>(client.List<ShoppingItem>(DatasetId));
+                    PropertyChanged(this, new PropertyChangedEventArgs("ShoppingItems"));
+                });
             };
 
-            await _dataset.StartSyncLoop();
+            client.Manage<ShoppingItem>(DatasetId, config, null);
         }
     }
 
@@ -108,10 +105,10 @@ namespace sync_windows_app
             Created = DateTime.Now;
         }
 
-        [JsonProperty]
+        [JsonProperty("name")]
         public string Name { set; get; }
 
-        [JsonProperty]
+        [JsonProperty("created")]
         public DateTime Created { set; get; }
 
         [JsonIgnore]
