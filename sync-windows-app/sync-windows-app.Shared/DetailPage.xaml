@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="sync_windows_app.DetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:sync_windows_app"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Save" Label="Save" Click="SaveButton_OnClick"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10">
+        <StackPanel>
+            <TextBlock FontSize="{ThemeResource HubHeaderThemeFontSize}">Edit Item</TextBlock>
+            <TextBlock>Name</TextBlock>
+            <TextBox Name="ItemName" KeyDown="ItemText_OnKeyDown"/>
+        </StackPanel>
+    </Grid>
+</Page>

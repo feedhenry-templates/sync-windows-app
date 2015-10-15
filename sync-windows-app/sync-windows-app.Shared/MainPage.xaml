@@ -8,32 +8,42 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Page.Resources>
+        <local:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
+    </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Delete" Label="Delete" Click="DeleteButton_OnClick"/>
+            <AppBarButton Icon="Add" Label="Add" Click="NewButton_OnClick"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBox Name="Item"/>
-            <Button Name="Button" Grid.Column="1" Click="Button_OnClick">Add</Button>
-        </Grid>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-        </StackPanel>
-        <ListView Name="ListView" SelectionMode="Single" IsItemClickEnabled="False" ItemsSource="{Binding ShoppingItems}" Grid.Row="1">
+        <TextBlock FontSize="{ThemeResource HubHeaderThemeFontSize}" Grid.Row="0">Sync demo</TextBlock>
+        <ListView Name="ListView" IsItemClickEnabled="True" ItemsSource="{Binding ShoppingItems}" ItemClick="ListView_OnItemClick" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Name}" Margin="16,20,16,0" TextWrapping="WrapWholeWords"/>
+                    <StackPanel Holding="ListViewItem_Holding" RightTapped="ListView_OnRightTapped">
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Delete" Click="DeleteButton_OnClick"/>
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
+                        <TextBlock Text="{Binding Name}" TextWrapping="WrapWholeWords" FontSize="20" Foreground="{ThemeResource SystemColorControlAccentColor}"/>
+                        <TextBlock Text="{Binding UID}"/>
+                        <TextBlock Text="{Binding Created}" HorizontalAlignment="Right"></TextBlock>
                         <Border BorderBrush="#e0e0e0" BorderThickness="0,0,0,1" Width="9999" Padding="0,20,0,0"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Grid.Row="2" HorizontalAlignment="Center" Click="DeleteButton_OnClick">Delete</Button>
+        <StackPanel Visibility="{Binding ShoppingItems.Count, Converter={StaticResource CountToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
+            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="70" HorizontalAlignment="Center">&#xE895;</TextBlock>
+            <TextBlock FontSize="{ThemeResource HubSectionHeaderThemeFontSize}" Margin="20">You have no items yet</TextBlock>
+            <Button HorizontalAlignment="Center" Click="NewButton_OnClick">Add an Item</Button>
+        </StackPanel>
     </Grid>
 </Page>
