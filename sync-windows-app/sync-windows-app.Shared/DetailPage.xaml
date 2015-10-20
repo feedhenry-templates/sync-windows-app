@@ -15,7 +15,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10">
         <StackPanel>
-            <TextBlock FontSize="{ThemeResource HubHeaderThemeFontSize}">Edit Item</TextBlock>
+            <TextBlock FontSize="{StaticResource TitleFontSize}">Edit Item</TextBlock>
             <TextBlock>Name</TextBlock>
             <TextBox Name="ItemName" KeyDown="ItemText_OnKeyDown"/>
         </StackPanel>

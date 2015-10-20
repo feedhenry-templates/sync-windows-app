@@ -27,6 +27,7 @@ namespace sync_windows_app
         public MainPage()
         {
             InitializeComponent();
+            ShoppingItems = new ObservableCollection<ShoppingItem>();
             DataContext = this;
 
             NavigationCacheMode = NavigationCacheMode.Required;
@@ -44,20 +45,44 @@ namespace sync_windows_app
         /// </param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            await FHClient.Init();
-            var client = FHSyncClient.GetInstance();
-            var config = new FHSyncConfig();
-            client.Initialise(config);
-            client.SyncCompleted += async (sender, args) =>
+            var shoppingItem = e.Parameter as ShoppingItem;
+            if (shoppingItem != null)
             {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    ShoppingItems = new ObservableCollection<ShoppingItem>(client.List<ShoppingItem>(DatasetId).OrderBy(i => i.Created));
-                    PropertyChanged(this, new PropertyChangedEventArgs("ShoppingItems"));
-                });
-            };
 
-            client.Manage<ShoppingItem>(DatasetId, config, null);
+                var index = ShoppingItems.IndexOf(shoppingItem);
+                if (index != -1)
+                {
+                    ShoppingItems[index] = shoppingItem;
+                }
+                else
+                {
+                    ShoppingItems.Insert(0, shoppingItem);
+                }
+
+                FirePropertyChanged("ShoppingItems");
+            }
+            else
+            {
+                await FHClient.Init();
+                var client = FHSyncClient.GetInstance();
+                var config = new FHSyncConfig();
+                client.Initialise(config);
+                client.SyncCompleted += async (sender, args) =>
+                {
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        ShoppingItems.Clear();
+                        foreach (var item in client.List<ShoppingItem>(DatasetId).OrderByDescending(i => i.Created))
+                        {
+                            ShoppingItems.Add(item);
+                        }
+                        FirePropertyChanged("ShoppingItems");
+                    });
+                };
+
+                ShoppingItems = new ObservableCollection<ShoppingItem>();
+                client.Manage<ShoppingItem>(DatasetId, config, null);
+            }
         }
 
         private void ListView_OnItemClick(object sender, ItemClickEventArgs e)
@@ -83,9 +108,28 @@ namespace sync_windows_app
 
         private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (ListView.SelectedIndex == -1) return;
-            var shoppingItem = ShoppingItems[ListView.SelectedIndex];
+            ShoppingItem shoppingItem;
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem != null)
+            {
+                shoppingItem = menuFlyoutItem.DataContext as ShoppingItem;
+                if (shoppingItem == null) return;
+            }
+            else
+            {
+                if (ListView.SelectedIndex == -1) return;
+                shoppingItem = ShoppingItems[ListView.SelectedIndex];                
+            }
             FHSyncClient.GetInstance().Delete<ShoppingItem>(DatasetId, shoppingItem.UID);
+            ShoppingItems.Remove(shoppingItem);
+        }
+
+        private void FirePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 
@@ -109,6 +153,23 @@ namespace sync_windows_app
         public override string ToString()
         {
             return string.Format("[ShoppingItem: UID={0}, Name={1}, Created={2}]", UID, Name, Created);
+        }
+
+        private bool Equals(IFHSyncModel other)
+        {
+            return string.Equals(UID, other.UID);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((ShoppingItem) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (UID != null ? UID.GetHashCode() : 0);
         }
     }
 

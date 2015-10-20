@@ -22,7 +22,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock FontSize="{ThemeResource HubHeaderThemeFontSize}" Grid.Row="0">Sync demo</TextBlock>
+        <TextBlock FontSize="{StaticResource TitleFontSize}" Grid.Row="0">Sync demo</TextBlock>
         <ListView Name="ListView" IsItemClickEnabled="True" ItemsSource="{Binding ShoppingItems}" ItemClick="ListView_OnItemClick" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -32,7 +32,7 @@
                                 <MenuFlyoutItem Text="Delete" Click="DeleteButton_OnClick"/>
                             </MenuFlyout>
                         </FlyoutBase.AttachedFlyout>
-                        <TextBlock Text="{Binding Name}" TextWrapping="WrapWholeWords" FontSize="20" Foreground="{ThemeResource SystemColorControlAccentColor}"/>
+                        <TextBlock Text="{Binding Name}" TextWrapping="WrapWholeWords" FontSize="20" Foreground="{StaticResource AccentBrush}"/>
                         <TextBlock Text="{Binding UID}"/>
                         <TextBlock Text="{Binding Created}" HorizontalAlignment="Right"></TextBlock>
                         <Border BorderBrush="#e0e0e0" BorderThickness="0,0,0,1" Width="9999" Padding="0,20,0,0"/>
@@ -41,8 +41,12 @@
             </ListView.ItemTemplate>
         </ListView>
         <StackPanel Visibility="{Binding ShoppingItems.Count, Converter={StaticResource CountToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="1">
-            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="70" HorizontalAlignment="Center">&#xE895;</TextBlock>
-            <TextBlock FontSize="{ThemeResource HubSectionHeaderThemeFontSize}" Margin="20">You have no items yet</TextBlock>
+            <SymbolIcon Symbol="Sync" RenderTransformOrigin="0.5,0.5" Height="40" Width="40" Margin="10">
+                <SymbolIcon.RenderTransform>
+                    <CompositeTransform ScaleX="3" ScaleY="3"/>
+                </SymbolIcon.RenderTransform>
+            </SymbolIcon>
+            <TextBlock FontSize="{ThemeResource SubTitleFontSize}" Margin="20">You have no items yet</TextBlock>
             <Button HorizontalAlignment="Center" Click="NewButton_OnClick">Add an Item</Button>
         </StackPanel>
     </Grid>

@@ -33,7 +33,7 @@ namespace sync_windows_app
             var client = FHSyncClient.GetInstance();
             if (_shoppingItem == null)
             {
-                client.Create(MainPage.DatasetId, new ShoppingItem(ItemName.Text));
+                _shoppingItem = client.Create(MainPage.DatasetId, new ShoppingItem(ItemName.Text));
             }
             else if (!string.IsNullOrEmpty(ItemName.Text))
             {
@@ -41,7 +41,7 @@ namespace sync_windows_app
                 client.Update(MainPage.DatasetId, _shoppingItem);
             }
 
-            Frame.Navigate(typeof (MainPage));
+            Frame.Navigate(typeof (MainPage), _shoppingItem);
         }
 
         private void ItemText_OnKeyDown(object sender, KeyRoutedEventArgs e)
