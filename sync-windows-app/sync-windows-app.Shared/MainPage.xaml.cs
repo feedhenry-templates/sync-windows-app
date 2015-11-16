@@ -13,12 +13,10 @@ using FHSDK.Sync;
 using FHSDKPortable;
 using Newtonsoft.Json;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace sync_windows_app
 {
     /// <summary>
-    ///     An empty page that can be used on its own or navigated to within a Frame.
+    /// Main page that contains a list of all shopping items and gets synced with the backend
     /// </summary>
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
