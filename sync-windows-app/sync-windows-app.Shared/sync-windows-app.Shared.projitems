@@ -33,6 +33,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)fhconfig.local.json" />
+    <Content Include="$(MSBuildThisFileDirectory)fhconfig.json" />
   </ItemGroup>
 </Project>
