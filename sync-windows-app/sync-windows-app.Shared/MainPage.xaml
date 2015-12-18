@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Light">
 
     <Page.Resources>
         <local:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
@@ -17,13 +17,15 @@
             <AppBarButton Icon="Add" Label="Add" Click="NewButton_OnClick"/>
         </CommandBar>
     </Page.BottomAppBar>
-    <Grid Margin="20">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock FontSize="{StaticResource TitleFontSize}" Grid.Row="0">Sync demo</TextBlock>
-        <ListView Name="ListView" IsItemClickEnabled="True" ItemsSource="{Binding ShoppingItems}" ItemClick="ListView_OnItemClick" Grid.Row="1">
+        <Border Background="#FFE42112">
+            <TextBlock FontSize="{StaticResource TitleFontSize}" Foreground="White">Sync demo</TextBlock>
+        </Border>
+        <ListView Name="ListView" IsItemClickEnabled="True" ItemsSource="{Binding ShoppingItems}" ItemClick="ListView_OnItemClick" Grid.Row="1" Margin="20,0">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Holding="ListViewItem_Holding" RightTapped="ListView_OnRightTapped">
