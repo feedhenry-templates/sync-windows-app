@@ -1,15 +1,62 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/76fekkii1oo5whsx?svg=true)](https://ci.appveyor.com/project/edewit/sync-windows-app)
+# sync-windows-app [![Build status](https://ci.appveyor.com/api/projects/status/76fekkii1oo5whsx?svg=true)](https://ci.appveyor.com/project/edewit/sync-windows-app)
 
-# Windows Sync Template
+Author: Erik Jan de Wit   
+Level: Intermediate  
+Technologies: C#, Windows, RHMAP
+Summary: A demonstration of how to synchronize a single collection with RHMAP. 
+Community Project : [Feed Henry](http://feedhenry.org)
+Target Product: RHMAP  
+Product Versions: RHMAP 3.7.0+   
+Source: https://github.com/feedhenry-templates/sync-ios-app  
+Prerequisites: fh-dotnet-sdk : 3.+, Visual Studio 2015 / 2013
 
-This is a demonstration of how a basic sync app will work.
-Refer to [fhconfig.json](sync-windows-app/sync-windows-app.Shared/fhconfig.json)
-and [MainPage.xaml.cs](sync-windows-app/sync-windows-app.Shared/MainPage.xaml.cs)
-for the relevent pieces of code and configuraiton.
+## What is it?
 
-## Prerequisites
- * Visual Studio 2013 / 2015
+This application manages items in a collection that is synchronized with a remote RHMAP cloud application.  The user can create, update, and delete collection items.  Refer to [sync-windows-app.Shared/fhconfig.json](sync-windows-app/sync-windows-app.Shared/fhconfig.json) for the delevant pieces of code and configuration.
+
+If you do not have access to a RHMAP instance, you can sign up for a free instance at [https://openshift.feedhenry.com/](https://openshift.feedhenry.com/).
+
+## How do I run it?  
+
+### RHMAP Studio
+
+This application and its cloud services are available as a project template in RHMAP as part of the "Sync Framework Project" template.
+
+### Local Clone (ideal for Open Source Development)
+If you wish to contribute to this template, the following information may be helpful; otherwise, RHMAP and its build facilities are the preferred solution.
 
 ## Build instructions
- * Change fhconfig.local.json
- * Debug / Run from visual studio
+
+1. Clone this project
+
+2. Populate ```sync-windows-app.Shared/fhconfig.json``` with your values as explained [here](http://docs.feedhenry.com/v3/dev_tools/sdks/windows.html#windows-existing_app-set_up_configuration).
+
+3. Open sync-windows-app.sln
+
+4. Run the project
+ 
+## How does it work?
+
+### Start synchronization
+
+In ```sync-windows-app.Shared/MainPage.xaml.cs``` the synchronization loop is started.
+```
+  var client = FHSyncClient.GetInstance();
+  var config = new FHSyncConfig();
+  client.Initialise(config);   // [1]
+  client.SyncCompleted += async (sender, args) =>
+  {
+      await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+      {
+          ShoppingItems.Clear();
+          foreach (var item in client.List<ShoppingItem>(DatasetId).OrderByDescending(i => i.Created)) // [2]
+          {
+              ShoppingItems.Add(item);
+          }
+          FirePropertyChanged("ShoppingItems");
+      });
+  };
+```
+[1] Initialize with sync configuration.
+
+[2] Initialize a sync client for a given dataset.
