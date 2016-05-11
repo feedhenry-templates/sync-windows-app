@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="sync_windows_app.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,6 +10,7 @@
 
     <Page.Resources>
         <local:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
+        <local:DateConverter x:Key="DateConverter" />
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar>
@@ -36,7 +37,7 @@
                         </FlyoutBase.AttachedFlyout>
                         <TextBlock Text="{Binding Name}" TextWrapping="WrapWholeWords" FontSize="20" Foreground="{StaticResource AccentBrush}"/>
                         <TextBlock Text="{Binding UID}"/>
-                        <TextBlock Text="{Binding Created}" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="{Binding Created, Converter={StaticResource DateConverter}}" HorizontalAlignment="Right"></TextBlock>
                         <Border BorderBrush="#e0e0e0" BorderThickness="0,0,0,1" Width="9999" Padding="0,20,0,0"/>
                     </StackPanel>
                 </DataTemplate>
