@@ -9,8 +9,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "sync-windows-app.Shared", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync-windows-app.Windows", "sync-windows-app\sync-windows-app.Windows\sync-windows-app.Windows.csproj", "{3C1D8ACE-A9BF-4E6A-8B54-31D3B3D80845}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync-windows-app.WindowsPhone", "sync-windows-app\sync-windows-app.WindowsPhone\sync-windows-app.WindowsPhone.csproj", "{C0B9C6C8-86D7-4A09-BBB8-DA4BC01715FC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync-windows-app.Universal", "sync-windows-app\sync-windows-app.Universal\sync-windows-app.Universal.csproj", "{1D3159FF-9479-4B53-B5EA-4A173B716C7E}"
 EndProject
 Global
