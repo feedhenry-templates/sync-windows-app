@@ -1,4 +1,5 @@
-# sync-windows-app [![Build status](https://ci.appveyor.com/api/projects/status/76fekkii1oo5whsx?svg=true)](https://ci.appveyor.com/project/edewit/sync-windows-app)
+# sync-windows-app
+[![Build status](https://ci.appveyor.com/api/projects/status/76fekkii1oo5whsx?svg=true)](https://ci.appveyor.com/project/edewit/sync-windows-app)
 
 Author: Erik Jan de Wit   
 Level: Intermediate  
@@ -12,7 +13,7 @@ Prerequisites: fh-dotnet-sdk : 3.+, Visual Studio 2015 / 2013
 
 ## What is it?
 
-This application manages items in a collection that is synchronized with a remote RHMAP cloud application.  The user can create, update, and delete collection items.  Refer to `sync-windows-app/sync-windows-app.Shared/fhconfig.json` for the delevant pieces of code and configuration.
+This application manages items in a collection that is synchronized with a remote RHMAP cloud application.  The user can create, update, and delete collection items.  Refer to `sync-windows-app/sync-windows-app.Shared/fhconfig.json` for the relevant pieces of code and configuration.
 
 If you do not have access to a RHMAP instance, you can sign up for a free instance at [https://openshift.feedhenry.com/](https://openshift.feedhenry.com/).
 
