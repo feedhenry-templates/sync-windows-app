@@ -30,7 +30,7 @@ If you wish to contribute to this template, the following information may be hel
 
 1. Clone this project
 
-2. Populate ```sync-windows-app.Shared/fhconfig.json``` with your values as explained [here](http://docs.feedhenry.com/v3/dev_tools/sdks/windows.html#windows-existing_app-set_up_configuration).
+2. Populate ```sync-windows-app.Shared/fhconfig.json``` with your values as explained [here](https://access.redhat.com/documentation/en-us/red_hat_mobile_application_platform/4.3/html/client_sdk/native-windows#native-windows-set-up-configuration).
 
 3. Open sync-windows-app.sln
 
