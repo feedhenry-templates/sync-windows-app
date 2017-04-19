@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -70,7 +71,7 @@ namespace sync_windows_app
                     await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         ShoppingItems.Clear();
-                        foreach (var item in client.List<ShoppingItem>(DatasetId).OrderByDescending(i => i.Created))
+                        foreach (var item in client.List<ShoppingItem>(DatasetId))//.OrderByDescending(i => i.Created))
                         {
                             ShoppingItems.Add(item);
                         }
@@ -136,14 +137,19 @@ namespace sync_windows_app
         public ShoppingItem(string name)
         {
             Name = name;
-            Created = DateTime.Now;
+            Created = Created = "" + (DateTime.Now - GetEpoch()).TotalMilliseconds;
+        }
+
+        internal static DateTime GetEpoch()
+        {
+            return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }
 
         [JsonProperty("name")]
         public string Name { set; get; }
 
         [JsonProperty("created")]
-        public DateTime Created { set; get; }
+        public string Created { set; get; }
 
         [JsonIgnore]
         public string UID { set; get; }
@@ -181,6 +187,20 @@ namespace sync_windows_app
         public object ConvertBack(object value, Type targetType, object parameter, string culture)
         {
             return new NotImplementedException();
+        }
+    }
+
+    public sealed class DateConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var Created = (string)value;
+            return Regex.IsMatch(Created, @"^\d*$") ? ShoppingItem.GetEpoch().AddMilliseconds(double.Parse(Created)).ToString("MMM dd, yyyy, H:mm:ss tt") : "no date";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
         }
     }
 }
