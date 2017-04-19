@@ -1,8 +1,8 @@
 ﻿{
-  "host": "",
-  "appid": "",
-  "apptitle": "",
-  "projectid": "",
-  "appkey": "",
-  "connectiontag": ""
+  "appid": "5buuz6m42v3eydmtouzyevhs",
+  "appkey": "556e2231544287fafa5009d131f3908be13e4c14",
+  "apptitle": "windowsapp",
+  "connectiontag": "0.0.1",
+  "host": "https://testing.zeta.feedhenry.com",
+  "projectid": "5buuz6nm75furxj2um4e3psg"
 }

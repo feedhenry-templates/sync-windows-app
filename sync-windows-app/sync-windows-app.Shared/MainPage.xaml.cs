@@ -143,6 +143,7 @@ namespace sync_windows_app
         public string Name { set; get; }
 
         [JsonProperty("created")]
+        [JsonConverter(typeof(MillisecondEpochConverter))]
         public DateTime Created { set; get; }
 
         [JsonIgnore]
@@ -181,6 +182,22 @@ namespace sync_windows_app
         public object ConvertBack(object value, Type targetType, object parameter, string culture)
         {
             return new NotImplementedException();
+        }
+    }
+
+    public class MillisecondEpochConverter : Newtonsoft.Json.Converters.DateTimeConverterBase
+    {
+        private static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteRawValue(Convert.ToInt64(((DateTime)value - _epoch).TotalMilliseconds).ToString());
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.Value == null) { return null; }
+            return _epoch.AddMilliseconds(Int64.Parse(reader.Value.ToString()));
         }
     }
 }
