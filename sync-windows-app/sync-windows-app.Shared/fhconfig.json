@@ -1,8 +1,8 @@
 ﻿{
-  "host": "",
   "appid": "",
-  "apptitle": "",
-  "projectid": "",
   "appkey": "",
-  "connectiontag": ""
+  "apptitle": "",
+  "connectiontag": "",
+  "host": "",
+  "projectid": ""
 }
